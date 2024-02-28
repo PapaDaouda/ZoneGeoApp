@@ -1,4 +1,5 @@
 ﻿using ZoneGeoApp.Data.Entities;
+using ZoneGeoApp.Data.Entities.Abstraction;
 using ZoneGeoApp.Data.FakeDb;
 
 namespace ZoneGeoApp.BusinessLogic.Services;
@@ -21,9 +22,9 @@ public class PaysService
         return FakeDatabase.GetPays(id);
     }
 
-    public void AddPays(Pays pays, string idContinent)
+    public void AddPays(CreatePaysDto paysDto, string idContinent)
     {
-        if (pays is null)
+        if (paysDto is null)
         {
             throw new Exception("Le pays ne peut pas etre null");
         }
@@ -34,6 +35,12 @@ public class PaysService
         {
             throw new Exception("Continent inexistant");
         }
+
+        var localisation = new Point(paysDto.Latitude, paysDto.Longitude);
+        Pays pays = new Pays(paysDto.Nom, 
+                        paysDto.Population, 
+                        paysDto.Superficie,
+                        localisation);
 
         pays.IdContinent = idContinent;
 
